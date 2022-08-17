@@ -8,6 +8,7 @@ import confetti from "canvas-confetti";
 import currentPrice from "./currentPrice";
 import Image from "next/image";
 import checkUpkeep from "./upKeep";
+import performUpKeep from "./performUpKeep";
 
 export default function Hero() {
     const [isWalletConnected, setIsWalletConnected] = useState(false);
@@ -15,6 +16,7 @@ export default function Hero() {
     const [isminting, setIsminting] = useState(false);
     const [data, setData] = useState(null);
     const [price, setPrice] = useState("");
+    const [isUpKeepNeeded, setIsUpKeepNeeded] = useState(false);
     const toast = useToast();
     useEffect(() => {
         currentPrice().then(res => {
@@ -29,21 +31,40 @@ export default function Hero() {
     }, [])
 
     function Upkeep() {
-        checkUpkeep().then(r => {
-            r[0] === true ? toast({
-                title: 'Upkeep is Needed',
-                position: 'top-right',
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-            }) : toast({
-                title: 'Wallet Connected',
-                position: 'top-right',
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-            })
+        toast({
+            title: 'Checking for upkeep',
+            description: 'Quering block-chain for latest data',
+            position: 'top-right',
+            status: 'info',
+            duration: 2500,
+            isClosable: true,
         })
+        checkUpkeep().then(r => {
+            r[0] === true ? needUpKeep() : NoneedUpKeep()
+        })
+    }
+    const NoneedUpKeep = () => {
+        toast({
+            title: 'NFT Upto date',
+            description: "No need to perform upkeep",
+            position: 'top-right',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+        })
+        setIsUpKeepNeeded(false);
+    }
+    const needUpKeep = () => {
+        toast({
+            title: 'Upkeep is Needed',
+            description: "Perform upkeep",
+            position: 'top-right',
+            variant: "solid",
+            status: "warning",
+            duration: 2000,
+            isClosable: true,
+        })
+        setIsUpKeepNeeded(true);
     }
     const connectWallet = async () => {
         try {
@@ -81,9 +102,10 @@ export default function Hero() {
                     setCurrentAccount(getAccount[0]);
                     toast({
                         title: 'Wallet Connected',
-                        position: 'top-right',
+                        description: "You can now mint NFT",
+                        position: 'top',
                         status: 'success',
-                        duration: 2000,
+                        duration: 2500,
                         isClosable: true,
                     })
                     console.log(currentAccount);
@@ -120,9 +142,25 @@ export default function Hero() {
             console.log(error);
         }
     }
+    async function chainUpKeep() {
+        toast({
+            title: 'Performing UpKeep',
+            position: 'top-right',
+            status: "loading",
+            isClosable: true,
+        })
+        const r = await performUpKeep();
+        await r.wait();
+        toast({
+            title: 'NFT updated',
+            position: 'top-right',
+            status: "success",
+            isClosable: true,
+        })
+    }
     return (
-        <Flex h="container.sm" alignItems={"center"} px='10'>
-            <VStack width={"50%"}>
+        <Flex h="container.sm" alignItems={"center"} px='10' flexDirection={["column", null, "row"]}>
+            <VStack flex={"1"}>
                 <Flex fontSize={"5xl"}>
                     What is a
                     <Text mx={"2"} color={"orange.400"} fontWeight="extrabold">
@@ -177,15 +215,29 @@ export default function Hero() {
                         color={"black"}
                         onClick={Upkeep}
                     >Check Upkeep</Button>
+                    {
+                        isUpKeepNeeded === true &&
+                        (
+                            <Button
+                                my="8"
+                                colorScheme={"purple"}
+                                fontSize="2xl"
+                                variant={"solid"}
+                                color={"black"}
+                                onClick={chainUpKeep}
+                            >Perform UpKeep</Button>
+                        )
+                    }
                 </Flex>
             </VStack>
-            <VStack flex={"2"}>
+            <VStack flex={"0.8"}>
                 {
                     data && (
-                        <figure>
+                        <>
+                            <Text fontSize={"4xl"} color="violet" fontWeight={"extrabold"} textAlign="center">Live NFT</Text>
                             <img className="rounded" src={data.image} width="350" height={"350"} style={{ borderRadius: "10px" }} />
-                            <Text color={"blue.600"} fontSize="2xl" letterSpacing={"widest"} textAlign={"center"}>{data.name.split("_").join("").toUpperCase()}</Text>
-                        </figure>)
+                            <Text color={"violet"} fontSize="3xl" fontWeight={"semibold"} letterSpacing={"widest"} textAlign={"center"}>{data.name.split("_").join("").toUpperCase()}</Text>
+                        </>)
                 }
 
             </VStack>
