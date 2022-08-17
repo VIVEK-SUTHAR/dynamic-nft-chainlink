@@ -117,6 +117,9 @@ export default function Hero() {
             console.log(err);
         }
     }
+    useEffect(()=>{
+        connectWallet()
+    },[])
     async function MintNFT() {
         try {
             const { ethereum } = window;
