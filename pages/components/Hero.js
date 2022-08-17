@@ -150,6 +150,12 @@ export default function Hero() {
             isClosable: true,
         })
         const r = await performUpKeep();
+        toast({
+            title: 'Performing UpKeep',
+            position: 'top-right',
+            status: "loading",
+            isClosable: true,
+        })
         await r.wait();
         toast({
             title: 'NFT updated',
@@ -160,18 +166,18 @@ export default function Hero() {
     }
     return (
         <Flex h="container.sm" alignItems={"center"} px='10' flexDirection={["column", null, "row"]}>
-            <VStack flex={"1"}>
-                <Flex fontSize={"5xl"}>
+            <VStack flex={"1"} px={["", null]}>
+                <Flex fontSize={["2xl", null, "5xl"]} >
                     What is a
                     <Text mx={"2"} color={"orange.400"} fontWeight="extrabold">
                         Dynamic NFT
                     </Text>
                     ?
                 </Flex>
-                <Text fontSize={"3xl"} textAlign="center">A Dynamic NFT is a NFT that changes according to the current prices of BTC in USD</Text>
+                <Text fontSize={["xl", null, "3xl"]} px={["5", null, "0"]} textAlign={["start", null, 'center']}>A Dynamic NFT is a NFT that changes according to the current prices of BTC in USD</Text>
                 <Text fontSize={"2xl"}>Current price is {parseInt(price).toString().slice(0, 5)} USD</Text>
                 {currentAccount && (
-                    <Text fontSize={"xl"}>NFT will be minted at {currentAccount}</Text>
+                    <Text fontSize={["xs", null, "2xl"]} textAlign="center">NFT will be minted at {currentAccount}</Text>
                 )}
                 {
                     isminting ? (
@@ -180,13 +186,13 @@ export default function Hero() {
                         </Flex>
                     ) : (null)
                 }
-                <Flex alignItems={"center"} gap="10">
+                <Flex alignItems={"center"} gap={["2", null, "10"]}>
                     {
                         isWalletConnected ? (
                             <Button
                                 my="8"
                                 colorScheme={"purple"}
-                                fontSize="2xl"
+                                fontSize={["xl", "xl", "2xl"]}
                                 variant={"solid"}
                                 color={"black"}
                                 onClick={MintNFT}
@@ -197,7 +203,7 @@ export default function Hero() {
                             <Button
                                 my="8"
                                 colorScheme={"purple"}
-                                fontSize="2xl"
+                                fontSize={["xl", "xl", "2xl"]}
                                 variant={"solid"}
                                 color={"black"}
                                 onClick={connectWallet}
@@ -210,7 +216,7 @@ export default function Hero() {
                     <Button
                         my="8"
                         colorScheme={"purple"}
-                        fontSize="2xl"
+                        fontSize={["xl", "xl", "2xl"]}
                         variant={"solid"}
                         color={"black"}
                         onClick={Upkeep}
