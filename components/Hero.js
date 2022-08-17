@@ -2,7 +2,9 @@ import { Box, Button, Flex, HStack, Text, Toast, VStack } from "@chakra-ui/react
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useToast } from '@chakra-ui/react'
-import { CONTRACT_ADDRESS, ABI } from "./constant";
+import CONTRACT_ADDRESS from "./constant";
+
+import { ABI } from "./constant";
 import { Spinner } from '@chakra-ui/react'
 import confetti from "canvas-confetti";
 import currentPrice from "./currentPrice";

@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-import { ABI, CONTRACT_ADDRESS } from "./constant";
+import { ABI } from "./constant";
+import CONTRACT_ADDRESS from "./constant";
 
 export default async function checkUpkeep() {
     try {
