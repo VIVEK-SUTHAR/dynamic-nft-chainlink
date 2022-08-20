@@ -117,9 +117,9 @@ export default function Hero() {
             console.log(err);
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         connectWallet()
-    },[])
+    }, [])
     async function MintNFT() {
         try {
             const { ethereum } = window;
@@ -168,6 +168,7 @@ export default function Hero() {
             status: "success",
             isClosable: true,
         })
+        window.history.go(0);
     }
     return (
         <Flex h="container.sm" alignItems={"center"} px='10' flexDirection={["column", null, "row"]}>
