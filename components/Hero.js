@@ -20,18 +20,17 @@ export default function Hero() {
     const [price, setPrice] = useState("");
     const [isUpKeepNeeded, setIsUpKeepNeeded] = useState(false);
     const toast = useToast();
-    useEffect(() => {
-        currentPrice().then(res => {
-            setPrice(res.price);
-            console.log(price);
-            fetch(res.tokenURI).then(res => {
-                res.json().then(res => {
-                    setData(res);
-                })
-            })
-        })
+    useEffect(
+        () => {
+        getData()
     }, [])
-
+    async function getData() {
+        const price =await currentPrice();
+        setPrice(price.price)
+        const URI = await fetch(price.tokenURI);
+        const JSONData = await URI.json();
+        setData(JSONData);
+    }
     function Upkeep() {
         toast({
             title: 'Checking for upkeep',
