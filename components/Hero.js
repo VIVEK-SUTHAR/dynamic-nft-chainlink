@@ -27,6 +27,7 @@ export default function Hero() {
   const [data, setData] = useState(null);
   const [price, setPrice] = useState("");
   const [isUpKeepNeeded, setIsUpKeepNeeded] = useState(false);
+  const [performingupkeep, setPerformingupkeep] = useState(false);
   const toast = useToast();
   useEffect(() => {
     getData();
@@ -161,6 +162,7 @@ export default function Hero() {
     }
   }
   async function chainUpKeep() {
+    setPerformingupkeep(true);
     toast({
       title: "Performing UpKeep",
       position: "top-right",
@@ -181,6 +183,7 @@ export default function Hero() {
       status: "success",
       isClosable: true,
     });
+    setPerformingupkeep(false);
     window.history.go(0);
   }
   return (
@@ -214,6 +217,12 @@ export default function Hero() {
             NFT will be minted at {currentAccount}
           </Text>
         )}
+        {!performingupkeep ? (
+          <Flex alignItems={"center"}>
+            <Spinner color="red.500" />
+            <Text marginInline={2} fontSize={24}>Updating the NFT </Text>
+          </Flex>
+        ) : null}
         {isminting ? (
           <Flex gap={"2"} fontSize="2xl" alignItems={"center"}>
             <Spinner />
