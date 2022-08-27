@@ -217,7 +217,7 @@ export default function Hero() {
             NFT will be minted at {currentAccount}
           </Text>
         )}
-        {!performingupkeep ? (
+        {performingupkeep ? (
           <Flex alignItems={"center"}>
             <Spinner color="red.500" />
             <Text marginInline={2} fontSize={24}>Updating the NFT </Text>
