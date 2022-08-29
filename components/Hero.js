@@ -10,7 +10,7 @@ import {
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import CONTRACT_ADDRESS from "./constant";
+import CONTRACT_ADDRESS, { AUTO_UPDATE_NFT_ABI, AUTO_UPDATE_NFT_CONTRACT_ADDRESS } from "./constant";
 
 import { ABI } from "./constant";
 import { Spinner } from "@chakra-ui/react";
@@ -161,6 +161,38 @@ export default function Hero() {
       console.log(error);
     }
   }
+  async function MintAutoUpdateNFT() {
+    try {
+      const { ethereum } = window;
+      const provider = new ethers.providers.Web3Provider(ethereum, "any");
+      const signer = provider.getSigner();
+      setIsminting(true);
+      const contract = new ethers.Contract(
+        AUTO_UPDATE_NFT_CONTRACT_ADDRESS,
+        AUTO_UPDATE_NFT_ABI,
+        signer
+      );
+      const Upkeep = await contract.safeMint(currentAccount);
+      await songs.wait();
+      toast({
+        title: "NFT Minted",
+        position: "top-right",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+      confetti({
+        particleCount: 500,
+        startVelocity: 20,
+        spread: 360,
+      });
+      console.log(songs);
+      setIsminting(false);
+    } catch (error) {
+      setIsminting(false)
+      console.log(error);
+    }
+  }
   async function chainUpKeep() {
     setPerformingupkeep(true);
     toast({
@@ -220,7 +252,9 @@ export default function Hero() {
         {performingupkeep ? (
           <Flex alignItems={"center"}>
             <Spinner color="red.500" />
-            <Text marginInline={2} fontSize={24}>Updating the NFT </Text>
+            <Text marginInline={2} fontSize={24}>
+              Updating the NFT{" "}
+            </Text>
           </Flex>
         ) : null}
         {isminting ? (
@@ -231,16 +265,28 @@ export default function Hero() {
         ) : null}
         <Flex alignItems={"center"} gap={["2", null, "10"]}>
           {isWalletConnected ? (
-            <Button
-              my="8"
-              colorScheme={"purple"}
-              fontSize={["xl", "xl", "2xl"]}
-              variant={"solid"}
-              color={"black"}
-              onClick={MintNFT}
-            >
-              Mint NFT
-            </Button>
+            <>
+              <Button
+                my="8"
+                colorScheme={"purple"}
+                fontSize={["xl", "xl", "2xl"]}
+                variant={"solid"}
+                color={"black"}
+                onClick={MintNFT}
+              >
+                Mint NFT(Mannual-Update)
+              </Button>
+              <Button
+                my="8"
+                colorScheme={"purple"}
+                fontSize={["xl", "xl", "2xl"]}
+                variant={"solid"}
+                color={"black"}
+                onClick={MintAutoUpdateNFT}
+              >
+                Mint NFT(Auto-Update)
+              </Button>
+            </>
           ) : (
             <Button
               my="8"
