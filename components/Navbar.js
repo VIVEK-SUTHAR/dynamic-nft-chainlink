@@ -11,7 +11,7 @@ export default function Navbar() {
                 bgClip="text"
                 bgGradient="linear(to-r, green.400,purple.500)"
                 fontWeight="extrabold"
-                fontSize={"3xl"}
+                fontSize={"6xl"}
             >
                 DynamicNFT
             </Text>{" "}

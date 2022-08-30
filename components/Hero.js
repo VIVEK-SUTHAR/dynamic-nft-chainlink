@@ -10,7 +10,10 @@ import {
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import CONTRACT_ADDRESS, { AUTO_UPDATE_NFT_ABI, AUTO_UPDATE_NFT_CONTRACT_ADDRESS } from "./constant";
+import CONTRACT_ADDRESS, {
+  AUTO_UPDATE_NFT_ABI,
+  AUTO_UPDATE_NFT_CONTRACT_ADDRESS,
+} from "./constant";
 
 import { ABI } from "./constant";
 import { Spinner } from "@chakra-ui/react";
@@ -19,7 +22,7 @@ import currentPrice from "./currentPrice";
 import Image from "next/image";
 import checkUpkeep from "./upKeep";
 import performUpKeep from "./performUpKeep";
-
+import Link from "next/link";
 export default function Hero() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [currentAccount, setCurrentAccount] = useState("");
@@ -151,14 +154,27 @@ export default function Hero() {
         isClosable: true,
       });
       confetti({
-        particleCount: 500,
-        startVelocity: 20,
-        spread: 360,
+        particleCount: 1500,
+        startVelocity: 120,
+        spread: 500,
+        origin: {
+          x: Math.random(),
+          y: Math.random() - 0.8,
+        },
       });
       console.log(songs);
       setIsminting(false);
     } catch (error) {
-      console.log(error);
+      if (error.code === 4001) {
+        setIsminting(false);
+        toast({
+          title: "User Rejected Txn",
+          position: "top",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     }
   }
   async function MintAutoUpdateNFT() {
@@ -189,8 +205,16 @@ export default function Hero() {
       console.log(songs);
       setIsminting(false);
     } catch (error) {
-      setIsminting(false)
-      console.log(error);
+      if (error.code === 4001) {
+        setIsminting(false);
+        toast({
+          title: "User Rejected Txn",
+          position: "top",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     }
   }
   async function chainUpKeep() {
@@ -235,17 +259,22 @@ export default function Hero() {
         </Flex>
         <Text
           fontSize={["xl", null, "3xl"]}
-          px={["5", null, "0"]}
-          textAlign={["start", null, "center"]}
+          px={["1", null, "0"]}
+          letterSpacing={[1, null, 0]}
+          textAlign={["justify", null, "center"]}
         >
           A Dynamic NFT is a NFT that changes according to the current prices of
-          BTC in USD
+          BitCoin(BTC) in USD
         </Text>
         <Text fontSize={"2xl"}>
           Current price is {parseInt(price).toString().slice(0, 5)} USD
         </Text>
         {currentAccount && (
-          <Text fontSize={["xs", null, "2xl"]} textAlign="center">
+          <Text
+            fontSize={["sm", null, "2xl"]}
+            fontWeight={"bold"}
+            textAlign="center"
+          >
             NFT will be minted at {currentAccount}
           </Text>
         )}
@@ -263,11 +292,16 @@ export default function Hero() {
             Minting NFT
           </Flex>
         ) : null}
-        <Flex alignItems={"center"} gap={["2", null, "10"]}>
+        <Flex
+          alignItems={"stretch"}
+          gap={["0", null, "10"]}
+          justifyContent={"center"}
+          flexDirection={["column", "row"]}
+        >
           {isWalletConnected ? (
             <>
               <Button
-                my="8"
+                my={[2, 8]}
                 colorScheme={"purple"}
                 fontSize={["xl", "xl", "2xl"]}
                 variant={"solid"}
@@ -277,7 +311,7 @@ export default function Hero() {
                 Mint NFT(Mannual-Update)
               </Button>
               <Button
-                my="8"
+                my={[2, 8]}
                 colorScheme={"purple"}
                 fontSize={["xl", "xl", "2xl"]}
                 variant={"solid"}
@@ -289,7 +323,7 @@ export default function Hero() {
             </>
           ) : (
             <Button
-              my="8"
+              my={[2, 8]}
               colorScheme={"purple"}
               fontSize={["xl", "xl", "2xl"]}
               variant={"solid"}
@@ -301,7 +335,7 @@ export default function Hero() {
             </Button>
           )}
           <Button
-            my="8"
+            my={[2, 8]}
             colorScheme={"purple"}
             fontSize={["xl", "xl", "2xl"]}
             variant={"solid"}
@@ -326,7 +360,14 @@ export default function Hero() {
       </VStack>
       <VStack flex={"0.8"}>
         {data && (
-          <>
+          <Flex
+            bg={"whiteAlpha.200"}
+            px={[4, 4]}
+            py={[4, 2]}
+            my={[2, 0]}
+            rounded={"md"}
+            flexDirection={"column"}
+          >
             <Text
               fontSize={"4xl"}
               color="violet"
@@ -340,18 +381,31 @@ export default function Hero() {
               src={data.image}
               width="350"
               height={"350"}
-              style={{ borderRadius: "10px" }}
+              style={{ borderRadius: "5px" }}
             />
-            <Text
-              color={"violet"}
-              fontSize="3xl"
-              fontWeight={"semibold"}
-              letterSpacing={"widest"}
-              textAlign={"center"}
-            >
-              {data.name.split("_").join("").toUpperCase()}
-            </Text>
-          </>
+            <VStack bg={"whiteAlpha.100"} p={[1, 2, 3]} rounded={"md"} my={2}>
+              <Text
+                color={"violet"}
+                fontSize="3xl"
+                fontWeight={"semibold"}
+                letterSpacing={"widest"}
+                textAlign={"center"}
+              >
+                {data.name.split("_").join("").toUpperCase()}
+              </Text>
+              <Button fontSize={"xl"}>
+                <img src="/opensea.svg" />
+                <a
+                  href={
+                    "https://testnets.opensea.io/assets/rinkeby/0x9AD01ceC84C2a28D86B0E8465c32d992f40a0ec2/0"
+                  }
+                  target={"_blank"}
+                >
+                  View On OpenSea
+                </a>
+              </Button>
+            </VStack>
+          </Flex>
         )}
       </VStack>
     </Flex>
