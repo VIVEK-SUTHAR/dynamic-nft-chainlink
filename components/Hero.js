@@ -399,6 +399,7 @@ export default function Hero() {
                   href={
                     "https://testnets.opensea.io/assets/rinkeby/0x9AD01ceC84C2a28D86B0E8465c32d992f40a0ec2/0"
                   }
+                  rel={"noreferrer"}
                   target={"_blank"}
                 >
                   View On OpenSea
