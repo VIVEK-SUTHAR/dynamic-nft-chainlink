@@ -90,13 +90,13 @@ export default function Hero() {
         let provider = new ethers.providers.Web3Provider(ethereum, "any");
         let signer = provider.getSigner();
         let chaindId = await signer.getChainId();
-        if (chaindId !== 4) {
+        if (chaindId !== 5) {
           setIsWalletConnected(false);
           signer.getChainId().then(async (res) => {
             if (res !== 4) {
               const rinkeby = await ethereum.request({
                 method: "wallet_switchEthereumChain",
-                params: [{ chainId: "0x4" }],
+                params: [{ chainId: "0x5" }],
               });
               const accounts = await ethereum.request({
                 method: "eth_requestAccounts",
@@ -112,7 +112,7 @@ export default function Hero() {
             }
           });
         }
-        if (chaindId === 4) {
+        if (chaindId === 5) {
           setIsWalletConnected(true);
           setCurrentAccount(getAccount[0]);
           toast({
